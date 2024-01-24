@@ -1,5 +1,5 @@
 const RootLayout = () => {
-  return <div>RootLayout</div>;
+  return <div className="w-full md:flex">RootLayout</div>;
 };
 
 export default RootLayout;
