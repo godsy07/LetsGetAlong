@@ -19,6 +19,7 @@ import FileUploader from "../shared/FileUploader";
 import { PostValidation } from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
+import { useCreatePost } from "@/lib/react-query/queriesAndMutations";
 
 type PostFormProps = {
   post?: Models.Document;
@@ -28,8 +29,8 @@ const PostForm = ({ post }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
-  //   const { mutateAsync: createPost, isPending: isLoadongCreate } =
-  //     useCreatePost();
+  const { mutateAsync: createPost, isPending: isLoadongCreate } =
+    useCreatePost();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof PostValidation>>({
@@ -43,14 +44,14 @@ const PostForm = ({ post }: PostFormProps) => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof PostValidation>) {
-    // const newPost = await createPost({ ...values, userId: user.id });
-    // if (!newPost) {
-    //   toast({
-    //     title: "Please try again",
-    //   });
-    // }
-    // navigate("/");
+  async function onSubmit(values: z.infer<typeof PostValidation>) {
+    const newPost = await createPost({ ...values, userId: user.id });
+    if (!newPost) {
+      toast({
+        title: "Please try again",
+      });
+    }
+    navigate("/");
   }
 
   return (
