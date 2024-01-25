@@ -16,8 +16,6 @@ export async function createUserAccount(user: INewUser) {
 
     const avatarUrl = avatars.getInitials(user.name);
 
-    console.log("newAccount: ", newAccount);
-    console.log("avatarUrl: ", avatarUrl);
     const newUser = await saveUserToDB({
       accountId: newAccount.$id,
       name: newAccount.name,
@@ -25,7 +23,6 @@ export async function createUserAccount(user: INewUser) {
       username: user.username,
       imageUrl: avatarUrl,
     });
-    console.log("saved new user: ", newUser);
 
     return newUser;
   } catch (error) {
@@ -116,7 +113,7 @@ export async function createPost(post: INewPost) {
     const fileUrl = getFilePreview(uploadedFile.$id);
 
     if (!fileUrl) {
-      deleteFile(uploadedFile.$id);
+      await deleteFile(uploadedFile.$id);
       throw Error;
     }
 
@@ -163,7 +160,7 @@ export async function uploadFile(file: File) {
   }
 }
 
-export async function getFilePreview(fileId: string) {
+export function getFilePreview(fileId: string) {
   try {
     const fileUrl = storage.getFilePreview(
       appwriteConfig.storageId,
@@ -185,6 +182,22 @@ export async function deleteFile(fileId: string) {
     await storage.deleteFile(appwriteConfig.storageId, fileId);
 
     return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getRecentPosts(fileId: string) {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.orderDesc("$createdAt"), Query.limit(20)]
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
   } catch (error) {
     console.log(error);
   }
