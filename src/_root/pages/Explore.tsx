@@ -13,7 +13,12 @@ import {
 
 const Explore = () => {
   const { ref, inView } = useInView();
-  const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
+  const {
+    data: posts,
+    isFetching: isFetchingPosts,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetPosts();
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
@@ -84,6 +89,12 @@ const Explore = () => {
           posts.pages.map((item, index) => (
             <GridPostList key={`page-${index}`} posts={item.documents} />
           ))
+        )}
+
+        {isFetchingPosts && hasNextPage && !searchValue && (
+          <div className="flex-center items-center w-full mt-2">
+            <Loader />
+          </div>
         )}
       </div>
 

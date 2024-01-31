@@ -11,7 +11,9 @@ import {
   deletePost,
   deleteSavedPost,
   getCurrentUser,
+  getCurrentUserInfinitePosts,
   getInfinitePosts,
+  getInfiniteSavedPosts,
   getPostById,
   getRecentPosts,
   likePost,
@@ -107,6 +109,9 @@ export const useSavePost = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_CURRENT_USER],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_INFINITE_SAVED_POSTS],
+      });
     },
   });
 };
@@ -191,5 +196,34 @@ export const useSearchPosts = (searchTerm: string) => {
     queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
     queryFn: () => searchPosts(searchTerm),
     enabled: !!searchTerm,
+  });
+};
+
+export const useGetCurrentUserPosts = (userId: string) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_CURRENT_USER_INFINITE_POSTS, userId],
+    queryFn: ({ pageParam }) =>
+      getCurrentUserInfinitePosts({ userId, pageParam }),
+    getNextPageParam: (lastPage) => {
+      if (lastPage && lastPage.documents.length === 0) return null;
+
+      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id;
+
+      return lastId;
+    },
+  });
+};
+
+export const useGetSavedPosts = (userId: string) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_INFINITE_SAVED_POSTS, userId],
+    queryFn: ({ pageParam }) => getInfiniteSavedPosts({ userId, pageParam }),
+    getNextPageParam: (lastPage) => {
+      if (lastPage && lastPage.documents.length === 0) return null;
+
+      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id;
+
+      return lastId;
+    },
   });
 };

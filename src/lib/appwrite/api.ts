@@ -187,7 +187,7 @@ export async function deleteFile(fileId: string) {
   }
 }
 
-export async function getRecentPosts(fileId: string) {
+export async function getRecentPosts() {
   try {
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
@@ -345,7 +345,7 @@ export async function deletePost(postId: string, imageId: string) {
 }
 
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
-  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)];
+  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(12)];
 
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
@@ -372,6 +372,70 @@ export async function searchPosts(searchTerm: string) {
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
       [Query.search("caption", searchTerm)]
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCurrentUserInfinitePosts({
+  userId,
+  pageParam,
+}: {
+  userId: string;
+  pageParam: number;
+}) {
+  const queries: any[] = [
+    Query.equal("creator", [userId]),
+    Query.orderDesc("$updatedAt"),
+    Query.limit(12),
+  ];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      queries
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getInfiniteSavedPosts({
+  userId,
+  pageParam,
+}: {
+  userId: string;
+  pageParam: number;
+}) {
+  const queries: any[] = [
+    Query.equal("user", [userId]),
+    Query.orderDesc("$updatedAt"),
+    Query.limit(10),
+  ];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      queries
     );
 
     if (!posts) throw Error;
