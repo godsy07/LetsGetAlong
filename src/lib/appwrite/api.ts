@@ -1,6 +1,6 @@
 import { ID, Query } from "appwrite";
 
-import { INewPost, INewUser, IUpdatePost } from "@/types";
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import { account, storage, appwriteConfig, avatars, databases } from "./config";
 
 export async function createUserAccount(user: INewUser) {
@@ -339,6 +339,54 @@ export async function deletePost(postId: string, imageId: string) {
     if (!statusCode) throw Error;
 
     return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateUser(user: IUpdateUser) {
+  const hasFileToUpdate = user.file.length > 0;
+  try {
+    let image = {
+      imageUrl: user.imageUrl,
+      imageId: user.imageId,
+    };
+
+    if (hasFileToUpdate) {
+      // Upload image to storage
+      const uploadedFile = await uploadFile(user.file[0]);
+      if (!uploadedFile) throw Error;
+
+      // Get file url
+      const fileUrl = getFilePreview(uploadedFile.$id);
+
+      if (!fileUrl) {
+        await deleteFile(uploadedFile.$id);
+        throw Error;
+      }
+
+      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+    }
+
+    // Save post to database
+    const updatedUser = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      user.userId,
+      {
+        name: user.name,
+        bio: user.bio,
+        imageUrl: image.imageUrl,
+        imageId: image.imageId,
+      }
+    );
+
+    if (!updatedUser) {
+      await deleteFile(user.imageId);
+      throw Error;
+    }
+
+    return updatedUser;
   } catch (error) {
     console.log(error);
   }
