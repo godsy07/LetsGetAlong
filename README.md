@@ -2,6 +2,7 @@
 A simple social media app, where user can upload images, add captions and like and save the posts.
 
 NodeJS version used: v20.10.0
+
 To setup the project in local machine.
 1. Clone the repository:
    ```git clone https://github.com/godsy07/LetsGetAlong.git```
