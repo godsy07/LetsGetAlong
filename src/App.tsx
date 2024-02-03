@@ -15,6 +15,7 @@ import {
   PostDetails,
   Profile,
   Saved,
+  UpdatePassword,
   UpdateProfile,
 } from "./_root/pages";
 
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/posts/:id" element={<PostDetails />} />
           <Route path="/profile/:id/*" element={<Profile />} />
           <Route path="/update-profile/:id" element={<UpdateProfile />} />
+          <Route path="/update-password/:id" element={<UpdatePassword />} />
         </Route>
       </Routes>
 
