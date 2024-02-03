@@ -16,15 +16,23 @@ import {
   getInfiniteSavedPosts,
   getPostById,
   getRecentPosts,
+  getUserDetails,
   likePost,
   savePost,
   searchPosts,
   signInAccount,
   signOutAccount,
+  updatePassword,
   updatePost,
   updateUser,
 } from "../appwrite/api";
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import {
+  INewPost,
+  INewUser,
+  IUpdatePassword,
+  IUpdatePost,
+  IUpdateUser,
+} from "@/types";
 import { QUERY_KEYS } from "./queryKeys";
 
 export const useCreateUserAccount = () => {
@@ -143,6 +151,13 @@ export const useGetCurrentUser = () => {
   });
 };
 
+export const useGetUserDetails = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_DETAILS],
+    queryFn: () => getUserDetails(userId),
+  });
+};
+
 export const useGetPostById = (postId: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
@@ -174,6 +189,13 @@ export const useUpdateUser = () => {
         queryKey: [QUERY_KEYS.GET_CURRENT_USER],
       });
     },
+  });
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: ({ userId, password, current_password }: IUpdatePassword) =>
+      updatePassword(userId, password, current_password),
   });
 };
 

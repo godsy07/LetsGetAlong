@@ -28,3 +28,9 @@ export const UserValidation = z.object({
   bio: z.string().min(2).max(100),
   file: z.custom<File[]>(),
 });
+
+export const PasswordValidation = z.object({
+  password: z.string().min(8).max(32),
+  repeat_password: z.string().min(8).max(32),
+  current_password: z.string().min(8),
+});

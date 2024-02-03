@@ -22,6 +22,12 @@ export type IUpdateUser = {
   file: File[];
 };
 
+export type IUpdatePassword = {
+  userId: string;
+  password: string;
+  current_password: string;
+};
+
 export type INewPost = {
   userId: string;
   caption: string;
