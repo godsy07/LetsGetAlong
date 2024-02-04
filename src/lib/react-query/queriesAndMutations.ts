@@ -220,7 +220,7 @@ export const useGetPosts = () => {
     getNextPageParam: (lastPage) => {
       if (lastPage && lastPage.documents.length === 0) return null;
 
-      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id;
+      const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id;
 
       return lastId;
     },
@@ -241,9 +241,9 @@ export const useGetCurrentUserPosts = (userId: string) => {
     queryFn: ({ pageParam }) =>
       getCurrentUserInfinitePosts({ userId, pageParam }),
     getNextPageParam: (lastPage) => {
-      if (lastPage && lastPage.documents.length === 0) return null;
+      if (lastPage && lastPage?.documents.length === 0) return null;
 
-      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id;
+      const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id;
 
       return lastId;
     },

@@ -29,9 +29,9 @@ const Saved = () => {
 
       <div className="flex flex-wrap gap-9 w-full max-w-5xl mt-10">
         <ul className="grid-container">
-          {posts?.pages.map((item, index) => (
+          {posts?.pages.map((item: any, index) => (
             <React.Fragment key={index}>
-              {item.documents.map((doc) => (
+              {item.documents.map((doc: any) => (
                 <li key={doc.$id} className="relative min-w-80 h-80">
                   <Link
                     to={`/posts/${doc.post.$id}`}

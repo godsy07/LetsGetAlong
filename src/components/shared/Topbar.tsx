@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "../ui/button";
-import { useSignInAccount } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
+import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations";
 
 const Topbar = () => {
   const navigate = useNavigate();
   const { user } = useUserContext();
-  const { mutate: signOut, isSuccess } = useSignInAccount();
+  const { mutate: signOut, isSuccess } = useSignOutAccount();
 
   useEffect(() => {
     if (isSuccess) navigate(0);
@@ -19,7 +19,8 @@ const Topbar = () => {
       <div className="flex-between py-4 px-5">
         <Link to="/" className="flex gap-3 items-center">
           <img
-            src="/assets/images/logo.svg"
+            // src="/assets/images/logo.svg"
+            src="/assets/images/logo.png"
             alt="logo"
             width={130}
             height={325}
