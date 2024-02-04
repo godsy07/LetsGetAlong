@@ -10,7 +10,7 @@ import PostStats from "@/components/shared/PostStats";
 const PostDetails = () => {
   const { id } = useParams();
   const { user } = useUserContext();
-  const { data: post, isPending } = useGetPostById(id);
+  const { data: post, isPending } = useGetPostById(id ? id : "");
 
   const handleDeletePost = () => {};
 
