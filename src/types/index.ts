@@ -1,3 +1,5 @@
+import { Models } from "appwrite";
+
 export type IContextType = {
   user: IUser;
   isLoading: boolean;
@@ -60,4 +62,9 @@ export type INewUser = {
   email: string;
   username: string;
   password: string;
+};
+
+export type lastPageType = {
+  total: number;
+  documents: Models.Document[];
 };

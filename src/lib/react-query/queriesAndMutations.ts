@@ -218,9 +218,10 @@ export const useGetPosts = () => {
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
     queryFn: getInfinitePosts,
     getNextPageParam: (lastPage) => {
+      if (!lastPage) return null;
       if (lastPage && lastPage.documents.length === 0) return null;
 
-      const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id;
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
 
       return lastId;
     },
@@ -238,12 +239,13 @@ export const useSearchPosts = (searchTerm: string) => {
 export const useGetCurrentUserPosts = (userId: string) => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER_INFINITE_POSTS, userId],
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam }: { pageParam: number }) =>
       getCurrentUserInfinitePosts({ userId, pageParam }),
     getNextPageParam: (lastPage) => {
-      if (lastPage && lastPage?.documents.length === 0) return null;
+      if (!lastPage) return null;
+      if (lastPage && lastPage.documents.length === 0) return null;
 
-      const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id;
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
 
       return lastId;
     },
@@ -252,12 +254,14 @@ export const useGetCurrentUserPosts = (userId: string) => {
 
 export const useGetSavedPosts = (userId: string) => {
   return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.GET_INFINITE_SAVED_POSTS, userId],
-    queryFn: ({ pageParam }) => getInfiniteSavedPosts({ userId, pageParam }),
+    queryKey: [QUERY_KEYS.GET_INFINITE_SAVED_POSTS],
+    queryFn: ({ pageParam }: { pageParam: number }) =>
+      getInfiniteSavedPosts({ userId, pageParam }),
     getNextPageParam: (lastPage) => {
+      if (!lastPage) return null;
       if (lastPage && lastPage.documents.length === 0) return null;
 
-      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id;
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
 
       return lastId;
     },

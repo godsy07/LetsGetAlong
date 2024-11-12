@@ -5,6 +5,7 @@ import Loader from "@/components/shared/Loader";
 import { useUserContext } from "@/context/AuthContext";
 import { useGetSavedPosts } from "@/lib/react-query/queriesAndMutations";
 import { useInView } from "react-intersection-observer";
+import { Models } from "appwrite";
 
 const Saved = () => {
   const { user } = useUserContext();
@@ -31,7 +32,7 @@ const Saved = () => {
         <ul className="grid-container">
           {posts?.pages.map((item: any, index) => (
             <React.Fragment key={index}>
-              {item.documents.map((doc: any) => (
+              {item.documents.map((doc: Models.Document) => (
                 <li key={doc.$id} className="relative min-w-80 h-80">
                   <Link
                     to={`/posts/${doc.post.$id}`}

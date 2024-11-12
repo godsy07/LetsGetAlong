@@ -8,12 +8,30 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useGetUserDetails } from "@/lib/react-query/queriesAndMutations";
+import {
+  useGetCurrentUserPosts,
+  useGetUserDetails,
+} from "@/lib/react-query/queriesAndMutations";
+import Loader from "@/components/shared/Loader";
+import React, { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { Models } from "appwrite";
 
 const Profile = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { user } = useUserContext();
-  const { data: userData } = useGetUserDetails(id ? id : "");
+  const { ref, inView } = useInView();
+  const { data: userData } = useGetUserDetails(id || "");
+  const {
+    data: posts,
+    isFetching: isFetchingPosts,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetCurrentUserPosts(id || "");
+
+  useEffect(() => {
+    if (inView) fetchNextPage();
+  }, [inView]);
 
   return (
     <div className="flex flex-1">
@@ -59,6 +77,34 @@ const Profile = () => {
             </div>
           </div>
         </div>
+
+        <div className="flex flex-wrap gap-9 w-full max-w-5xl mt-10">
+          <ul className="grid-container">
+            {posts?.pages.map((item: any, index) => (
+              <React.Fragment key={index}>
+                {item.documents.map((doc: Models.Document) => (
+                  <li key={doc.$id} className="relative min-w-80 h-80">
+                    <Link to={`/posts/${doc.$id}`} className="grid-post_link">
+                      <img
+                        src={doc.imageUrl}
+                        alt="post"
+                        className="h-full w-full object-cover"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </React.Fragment>
+            ))}
+          </ul>
+
+          {isFetchingPosts && hasNextPage && (
+            <div className="flex-center items-center w-full mt-2">
+              <Loader />
+            </div>
+          )}
+        </div>
+
+        {hasNextPage && <div ref={ref} className="mt-10"></div>}
       </div>
     </div>
   );
