@@ -6,9 +6,10 @@ import PostStats from "./PostStats";
 
 type PostCardProps = {
   post: Models.Document;
+  viewPost: () => void;
 };
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({ post, viewPost }: PostCardProps) => {
   const { user } = useUserContext();
 
   if (!post.creator) return;
@@ -50,7 +51,7 @@ const PostCard = ({ post }: PostCardProps) => {
         </Link>
       </div>
 
-      <Link to={`/posts/${post.$id}`}>
+      <div onClick={viewPost} className="cursor-pointer">
         <div className="small-medium lg:base-medium py-5">
           <p>{post.caption}</p>
           <ul className="flex gap-1 mt-2">
@@ -62,12 +63,14 @@ const PostCard = ({ post }: PostCardProps) => {
           </ul>
         </div>
 
-        <img
-          src={post.imageUrl || "/assets/icons/profile-placeholder.svg"}
-          className="post-card_img"
-          alt="post image"
-        />
-      </Link>
+        <div className="w-full bg-gray-900 rounded-xl flex justify-center items-center">
+          <img
+            src={post.imageUrl || "/assets/icons/profile-placeholder.svg"}
+            className="w-full max-h-[300px] rounded-xl object-contain"
+            alt="post image"
+          />
+        </div>
+      </div>
 
       <PostStats post={post} userId={user.id} />
     </div>

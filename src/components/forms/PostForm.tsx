@@ -61,9 +61,9 @@ const PostForm = ({ post, action }: PostFormProps) => {
       });
       if (!updatedPost) {
         toast({ title: "Please try again" });
+      } else {
+        toast({ title: "Post has been updated." });
       }
-
-      return navigate(`/posts/${post.$id}`);
     }
     const newPost = await createPost({ ...values, userId: user.id });
     if (!newPost) {

@@ -284,6 +284,7 @@ export async function getPostById(postId: string) {
       appwriteConfig.postCollectionId,
       postId,
     );
+    console.log("post: ", post);
 
     if (!post) throw Error;
 
@@ -433,6 +434,7 @@ export async function updatePassword(
 }
 
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(12)];
 
   if (pageParam) {
@@ -477,6 +479,7 @@ export async function getCurrentUserInfinitePosts({
   userId: string;
   pageParam: number;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queries: any[] = [
     Query.equal("creator", [userId]),
     Query.orderDesc("$updatedAt"),
@@ -509,6 +512,7 @@ export async function getInfiniteSavedPosts({
   userId: string;
   pageParam: number;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queries: any[] = [
     Query.equal("user", [userId]),
     Query.orderDesc("$updatedAt"),
