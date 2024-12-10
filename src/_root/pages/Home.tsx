@@ -1,9 +1,12 @@
+import { useState } from "react";
+import { Models } from "appwrite";
 import Loader from "@/components/shared/Loader";
 import PostCard from "@/components/shared/PostCard";
+import PostDetails from "@/components/shared/PostDetails";
 import { useGetRecentPosts } from "@/lib/react-query/queriesAndMutations";
-import { Models } from "appwrite";
 
 const Home = () => {
+  const [postId, setPostId] = useState("");
   const { data: posts, isPending: isPostLoading } = useGetRecentPosts();
 
   return (
@@ -16,9 +19,21 @@ const Home = () => {
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full">
               {posts?.documents.map((post: Models.Document) => (
-                <PostCard key={post.$id} post={post} />
+                <PostCard
+                  key={post.$id}
+                  post={post}
+                  viewPost={() => setPostId(post.$id)}
+                />
               ))}
             </ul>
+          )}
+
+          {postId && (
+            <PostDetails
+              show={postId ? true : false}
+              postId={postId}
+              onClose={() => setPostId("")}
+            />
           )}
         </div>
       </div>

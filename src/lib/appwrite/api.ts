@@ -284,6 +284,7 @@ export async function getPostById(postId: string) {
       appwriteConfig.postCollectionId,
       postId,
     );
+    console.log("post: ", post);
 
     if (!post) throw Error;
 

@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-
 import { Models } from "appwrite";
 import PostStats from "./PostStats";
 import { useUserContext } from "@/context/AuthContext";
+import { useState } from "react";
+import PostDetails from "./PostDetails";
 
 type GridPostListProps = {
   posts: Models.Document[];
@@ -16,18 +16,22 @@ const GridPostList = ({
   showStats = true,
 }: GridPostListProps) => {
   const { user } = useUserContext();
+  const [postId, setPostId] = useState("");
 
   return (
     <ul className="grid-container">
       {posts.map((post) => (
         <li key={post.$id} className="relative min-w-80 h-80">
-          <Link to={`/posts/${post.$id}`} className="grid-post_link">
+          <span
+            className="w-full cursor-pointer"
+            onClick={() => setPostId(post.$id)}
+          >
             <img
               src={post.imageUrl}
               alt="post"
               className="h-full w-full object-cover"
             />
-          </Link>
+          </span>
 
           <div className="grid-post_user">
             {showUser && (
@@ -44,6 +48,14 @@ const GridPostList = ({
           </div>
         </li>
       ))}
+
+      {postId && (
+        <PostDetails
+          show={postId ? true : false}
+          postId={postId}
+          onClose={() => setPostId("")}
+        />
+      )}
     </ul>
   );
 };

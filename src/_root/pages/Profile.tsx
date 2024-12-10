@@ -13,14 +13,16 @@ import {
   useGetUserDetails,
 } from "@/lib/react-query/queriesAndMutations";
 import Loader from "@/components/shared/Loader";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Models } from "appwrite";
+import PostDetails from "@/components/shared/PostDetails";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useUserContext();
   const { ref, inView } = useInView();
+  const [postId, setPostId] = useState("");
   const { data: userData } = useGetUserDetails(id || "");
   const {
     data: posts,
@@ -84,13 +86,19 @@ const Profile = () => {
               <React.Fragment key={index}>
                 {item.documents.map((doc: Models.Document) => (
                   <li key={doc.$id} className="relative min-w-80 h-80">
-                    <Link to={`/posts/${doc.$id}`} className="grid-post_link">
+                    {/* <Link to={`/posts/${doc.$id}`} className="grid-post_link">
+                    </Link> */}
+
+                    <span
+                      className="w-full cursor-pointer"
+                      onClick={() => setPostId(doc.$id)}
+                    >
                       <img
                         src={doc.imageUrl}
                         alt="post"
                         className="h-full w-full object-cover"
                       />
-                    </Link>
+                    </span>
                   </li>
                 ))}
               </React.Fragment>
@@ -105,6 +113,14 @@ const Profile = () => {
         </div>
 
         {hasNextPage && <div ref={ref} className="mt-10"></div>}
+
+        {postId && (
+          <PostDetails
+            show={postId ? true : false}
+            postId={postId}
+            onClose={() => setPostId("")}
+          />
+        )}
       </div>
     </div>
   );

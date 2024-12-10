@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 
+import { Models } from "appwrite";
 import Loader from "@/components/shared/Loader";
 import { useUserContext } from "@/context/AuthContext";
-import { useGetSavedPosts } from "@/lib/react-query/queriesAndMutations";
 import { useInView } from "react-intersection-observer";
-import { Models } from "appwrite";
+import PostDetails from "@/components/shared/PostDetails";
+import { useGetSavedPosts } from "@/lib/react-query/queriesAndMutations";
 
 const Saved = () => {
   const { user } = useUserContext();
   const { ref, inView } = useInView();
+  const [postId, setPostId] = useState("");
 
   const {
     data: posts,
@@ -34,16 +35,16 @@ const Saved = () => {
             <React.Fragment key={index}>
               {item.documents.map((doc: Models.Document) => (
                 <li key={doc.$id} className="relative min-w-80 h-80">
-                  <Link
-                    to={`/posts/${doc.post.$id}`}
-                    className="grid-post_link"
+                  <span
+                    className="w-full cursor-pointer"
+                    onClick={() => setPostId(doc.post.$id)}
                   >
                     <img
                       src={doc.post.imageUrl}
                       alt="post"
                       className="h-full w-full object-cover"
                     />
-                  </Link>
+                  </span>
 
                   <div className="grid-post_user">
                     <div className="flex items-center justify-start gap-2">
@@ -69,6 +70,14 @@ const Saved = () => {
       </div>
 
       {hasNextPage && <div ref={ref} className="mt-10"></div>}
+
+      {postId && (
+        <PostDetails
+          show={postId ? true : false}
+          postId={postId}
+          onClose={() => setPostId("")}
+        />
+      )}
     </div>
   );
 };
