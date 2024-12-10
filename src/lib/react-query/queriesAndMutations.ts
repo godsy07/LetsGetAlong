@@ -34,6 +34,7 @@ import {
   IUpdateUser,
 } from "@/types";
 import { QUERY_KEYS } from "./queryKeys";
+import { Models } from "appwrite";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -217,9 +218,11 @@ export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
     queryFn: getInfinitePosts,
-    getNextPageParam: (lastPage) => {
-      if (!lastPage) return null;
-      if (lastPage && lastPage.documents.length === 0) return null;
+    getNextPageParam: (
+      lastPage: { documents: Models.Document[]; total: number } | null,
+    ) => {
+      if (!lastPage || !Array.isArray(lastPage.documents)) return null;
+      if (lastPage.documents.length === 0) return null;
 
       const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
 
@@ -241,7 +244,9 @@ export const useGetCurrentUserPosts = (userId: string) => {
     queryKey: [QUERY_KEYS.GET_CURRENT_USER_INFINITE_POSTS, userId],
     queryFn: ({ pageParam }: { pageParam: number }) =>
       getCurrentUserInfinitePosts({ userId, pageParam }),
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: (
+      lastPage: { documents: Models.Document[]; total: number } | null,
+    ) => {
       if (!lastPage) return null;
       if (lastPage && lastPage.documents.length === 0) return null;
 
@@ -257,7 +262,9 @@ export const useGetSavedPosts = (userId: string) => {
     queryKey: [QUERY_KEYS.GET_INFINITE_SAVED_POSTS],
     queryFn: ({ pageParam }: { pageParam: number }) =>
       getInfiniteSavedPosts({ userId, pageParam }),
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: (
+      lastPage: { documents: Models.Document[]; total: number } | null,
+    ) => {
       if (!lastPage) return null;
       if (lastPage && lastPage.documents.length === 0) return null;
 
