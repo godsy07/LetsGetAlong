@@ -242,7 +242,7 @@ export const useSearchPosts = (searchTerm: string) => {
 export const useGetCurrentUserPosts = (userId: string) => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER_INFINITE_POSTS, userId],
-    queryFn: ({ pageParam }: { pageParam: number }) =>
+    queryFn: ({ pageParam }: { pageParam?: number }) =>
       getCurrentUserInfinitePosts({ userId, pageParam }),
     getNextPageParam: (
       lastPage: { documents: Models.Document[]; total: number } | null,
@@ -260,7 +260,7 @@ export const useGetCurrentUserPosts = (userId: string) => {
 export const useGetSavedPosts = (userId: string) => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_SAVED_POSTS],
-    queryFn: ({ pageParam }: { pageParam: number }) =>
+    queryFn: ({ pageParam }: { pageParam?: number }) =>
       getInfiniteSavedPosts({ userId, pageParam }),
     getNextPageParam: (
       lastPage: { documents: Models.Document[]; total: number } | null,

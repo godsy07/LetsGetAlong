@@ -477,7 +477,7 @@ export async function getCurrentUserInfinitePosts({
   pageParam,
 }: {
   userId: string;
-  pageParam: number;
+  pageParam?: number;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queries: any[] = [
@@ -510,7 +510,7 @@ export async function getInfiniteSavedPosts({
   pageParam,
 }: {
   userId: string;
-  pageParam: number;
+  pageParam?: number;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queries: any[] = [
